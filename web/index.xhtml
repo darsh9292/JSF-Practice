@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <div>
+            Header :
+            <ui:include src="header.xhtml"/>
+        </div>
+
+        <div>
+            Form Submit : 
+            <h:form>
+                <h:inputText id="inputtext" value="#{user.name}"/>
+                <h:commandButton id="btn" value="Home Page" action="home?faces-redirect=true"/>
+                <h:commandButton id="submit" value="Submit" action="home"/>
+            </h:form>
+        </div>
+
+        <div>
+            Form ajax :
+            <h:form>
+                <h:outputLabel id="outtext" value="#{user.name}"/>
+                <h:outputLabel id="outtext_msg" value="#{user.msg}"/>
+                <h:inputText id="inputtext" value="#{user.name}"/>
+                <h:commandButton value="Submit" action="#{user.check()}">
+                    <f:ajax event="keyup" execute="inputtext" render="outtext"/>
+                    <f:ajax execute="inputtext" render="outtext_msg"/>
+                </h:commandButton>
+
+                <h:commandButton value="Welcome Me">
+                    <f:ajax execute="inputtext" render="output" />
+                </h:commandButton>
+
+                <h2><h:outputText id="output" value="#{user.sayHello()}" /></h2>	
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

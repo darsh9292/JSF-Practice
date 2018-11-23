@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Shipment</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <h:panelGroup id="shipmentTermsBox">
+                <ui:repeat value="#{postOffer.shipmentTerms}" var="shipment">
+                    <h:selectBooleanCheckbox value="#{shipment.status}">
+                        <f:ajax event="change" listener="#{postOffer.addShipmentTermsRow(shipment)}" render=":form:shipmentTermsBox" />
+                    </h:selectBooleanCheckbox>
+                    <label for="stayin">#{shipment.name} </label> <br/>
+                    <ui:repeat var="shipmentRow" value="#{shipment.shipmentRowList}">
+                        <h:selectOneMenu value="#{shipmentRow.priceChoice}">
+                            <f:selectItem itemValue="Above Price" itemLabel="Above Price"/>
+                            <f:selectItem itemValue="+ (more)" itemLabel="+ (more)"/>
+                            <f:selectItem itemValue="- (more)" itemLabel="- (more)"/>                                                                   
+                            <f:ajax event="change" listener="#{postOffer.processPriceDiffChoice(shipmentRow)}" render=":form:shipmentTermsBox"/>
+                        </h:selectOneMenu>
+                        <h:panelGroup rendered="#{shipmentRow.priceEnable}">
+                            <h:inputText value="#{shipmentRow.price}">
+                                <f:ajax/>
+                            </h:inputText>
+                        </h:panelGroup>
+                        <h:commandButton value="Remove">
+                            <f:ajax event="action" listener="#{postOffer.removeShipmentTermsRow(shipment,shipmentRow)}" render=":form:shipmentTermsBox"/>
+                        </h:commandButton>
+                    </ui:repeat>
+                    <h:panelGroup rendered="#{shipment.status}">
+                        <h:commandButton value="Add More">
+                            <f:ajax event="action" listener="#{postOffer.addShipmentTermsRow(shipment)}" render=":form:shipmentTermsBox"/>
+                        </h:commandButton>
+                        <br/><br/>
+                    </h:panelGroup>
+                </ui:repeat>
+            </h:panelGroup>
+        </h:form>
+    </h:body>
+</html>
+

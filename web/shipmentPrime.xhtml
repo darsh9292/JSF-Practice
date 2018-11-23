@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <h:panelGroup id="shipmentTermsBox">
+                <ui:repeat value="#{postOffer.shipmentTerms}" var="shipment">
+                    <p:selectBooleanCheckbox value="#{shipment.status}">
+                        <p:ajax event="change" listener="#{postOffer.addShipmentTermsRow(shipment)}" update=":form:shipmentTermsBox"/>
+                    </p:selectBooleanCheckbox>
+                    <label for="stayin" class="form_text" style="margin-top:5px">#{shipment.name} </label>
+                    <ui:repeat value="#{shipment.shipmentRowList}" var="shipmentRow">
+                        <div class="new-block form-table">
+                            <div class="field-select1">
+                                <p:selectOneMenu value="#{shipmentRow.priceChoice}" appendTo="@this">
+                                    <f:selectItem itemValue="Above Price" itemLabel="Above Price"/>
+                                    <f:selectItem itemValue="+ (more)" itemLabel="+ (more)"/>
+                                    <f:selectItem itemValue="- (more)" itemLabel="- (more)"/>
+                                    <p:ajax event="change" listener="#{postOffer.processPriceDiffChoice(shipmentRow)}" update=":form:shipmentTermsBox"/>
+                                </p:selectOneMenu>
+                            </div>
+                            <h:panelGroup rendered="#{shipmentRow.priceEnable}">
+                                <div class="field-select">
+                                    <div class="from_col price_new">
+                                        <div class="prodprice-input">
+                                            <p:inputText styleClass="customprices textpadding" value="#{shipmentRow.price}" style="text-align:right;" placeholder="0.00">
+                                                <p:ajax/>
+                                            </p:inputText>
+                                            <span> / LB </span> <i> $ </i> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+                            <div class="add-btn-new-block"> 
+                                <h:commandLink value="Remove" styleClass="cancel-btn alignleft read-btn">
+                                    <p:ajax event="action" listener="#{postOffer.removeShipmentTermsRow(shipment,shipmentRow)}" update=":form:shipmentTermsBox"/>
+                                </h:commandLink>
+                            </div>
+                        </div>
+                    </ui:repeat>
+                    <h:panelGroup rendered="#{shipment.status}">
+                        <h:commandLink value="Add More" styleClass="addmore-btn">
+                            <p:ajax event="action" listener="#{postOffer.addShipmentTermsRow(shipment)}" update=":form:shipmentTermsBox"/>
+                        </h:commandLink>
+                        <br/><br/>
+                    </h:panelGroup>
+                </ui:repeat>
+            </h:panelGroup>
+        </h:form>
+    </h:body>
+</html>
+
